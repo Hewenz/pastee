@@ -5,7 +5,6 @@ const ClipFooter: React.FC = () => {
   return (
     <footer className="h-10 bg-[#0f1a23]/90 backdrop-blur border-t border-white/5 flex items-center justify-between px-4 shrink-0 z-20">
       <Button variant="ghost" className="flex items-center gap-2 group text-gray-400 hover:text-white transition-colors">
-        <span className="material-symbols-outlined text-[16px] group-hover:scale-110 transition-transform">grid_view</span>
         <span className="text-xs font-medium">Open Full View</span>
       </Button>
       <div className="flex items-center gap-4">

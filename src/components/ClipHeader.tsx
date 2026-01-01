@@ -12,14 +12,11 @@ const filterChips = [
 
 const ClipHeader: React.FC = () => {
 	return (
-		<header className="flex flex-col gap-3 px-4 pt-5 pb-3 bg-gradient-to-b from-[#0f1a23]/90 to-transparent shrink-0">
+		<header className="flex flex-col gap-3 px-4 pt-5 pb-3 bg-linear-to-b from-[#0f1a23]/90 to-transparent shrink-0">
 			{/* 搜索输入框 */}
 			<div className="relative group">
-				<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
-					<span className="material-symbols-outlined text-[20px]">search</span>
-				</div>
 				<Input
-					className="block w-full py-2.5 pl-10 pr-4 text-sm bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary focus:bg-black/40 transition-all shadow-inner"
+					className="block w-full py-2.5 pl-4 pr-4 text-sm bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary focus:bg-black/40 transition-all shadow-inner"
 					placeholder="Search clips..."
 					type="text"
 				/>
@@ -41,9 +38,6 @@ const ClipHeader: React.FC = () => {
 								: "bg-white/5 hover:bg-white/10 hover:text-white border-white/5 text-gray-400"
 						}`}
 					>
-						<span className="material-symbols-outlined text-[14px] fill-1">
-							{chip.icon}
-						</span>
 						{chip.label}
 					</Button>
 				))}

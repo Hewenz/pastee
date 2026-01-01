@@ -1,5 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import ReactSvg from "../assets/react.svg";
+
 
 export interface ClipItemData {
   type: "text" | "image" | "link" | "file" | "color" | "code";
@@ -17,13 +19,7 @@ const ClipItem: React.FC<{ item: ClipItemData }> = ({ item }) => {
     <div className="group relative flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 transition-colors cursor-default border border-transparent hover:border-white/5">
       {/* 图标或缩略图 */}
       <div className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center ${item.type === "image" ? "overflow-hidden relative bg-[#001e36] border border-white/10" : item.type === "color" ? "bg-black border border-white/10" : item.type === "file" ? "bg-[#e8c04d] text-black border border-white/5" : item.type === "code" ? "bg-[#2C2C32] border border-white/5" : item.type === "link" ? "bg-[#1e293b] border border-white/5" : "bg-[#1e2e3e] border border-white/5"}`}>
-        {item.type === "image" && item.imageUrl ? (
-          <img alt="Preview" className="w-full h-full object-cover opacity-80" src={item.imageUrl} />
-        ) : item.type === "color" && item.colorValue ? (
-          <div className="w-4 h-4 rounded-full" style={{ background: item.colorValue }}></div>
-        ) : (
-          <span className={`material-symbols-outlined text-[20px] ${item.type === "code" ? "text-blue-400" : item.type === "link" ? "text-blue-400" : item.type === "file" ? "text-[20px]" : item.type === "color" ? "" : "text-white"}`}>{item.icon}</span>
-        )}
+        <img alt="Preview" className="w-full h-full opacity-80" src={ReactSvg} />
         {item.type === "image" && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
             <span className="material-symbols-outlined text-white text-[16px] drop-shadow-md">image</span>

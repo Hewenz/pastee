@@ -3,6 +3,7 @@ import ClipApp from "./components/ClipApp";
 import ClipHeader from "./components/ClipHeader";
 import ClipList, { ClipGroup } from "./components/ClipList";
 import ClipFooter from "./components/ClipFooter";
+import "./App.css";
 
 // 示例数据
 const groups: ClipGroup[] = [
