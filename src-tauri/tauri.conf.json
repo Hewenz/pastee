@@ -12,14 +12,26 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "pastee",
-        "width": 800,
-        "height": 600
+        "width": 420,
+        "height": 750,
+        "decorations": false,
+        "resizable": true,
+        "transparent": true,
+        "visible": false,
+        "skipTaskbar": true,
+        "alwaysOnTop": true
       }
     ],
     "security": {
-      "csp": null
-    }
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["**"]
+      }
+    },
+    "macOSPrivateApi": true
   },
   "bundle": {
     "active": true,

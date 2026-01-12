@@ -16,10 +16,5 @@ fn main() {
         let _ = Master::new(handler).unwrap().run();
     });
 
-    thread::spawn(|| {
-        pastee_lib::handle_clipboard_event(rx);
-    });
-
-
-    pastee_lib::run()
+    pastee_lib::run(rx)
 }

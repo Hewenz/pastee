@@ -1,7 +1,6 @@
 use arboard::Clipboard;
 use clipboard_master::{CallbackResult, ClipboardHandler};
 use crossbeam_channel::Sender;
-use sha2::{Digest, Sha256};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
@@ -9,7 +8,7 @@ use std::time::{Duration, Instant};
 #[derive(Debug)]
 pub enum ClipEvent {
     Text(String),
-    Image(Vec<u8>), // 这里只传大小作为示例，实际可传 Vec<u8>
+    Image { width: usize, height: usize, rgba_data: Vec<u8> }, // RGBA 原始数据
     Html(String),
     FileList(Vec<std::path::PathBuf>),
     Error(String),
@@ -66,27 +65,7 @@ impl ClipboardHandler for SystemHook {
             }
         };
 
-        if let Ok(html) = ctx.get().html() {        // 优先读取 HTML
-            if !self.update_latest(html.as_bytes()) {
-                return CallbackResult::Next;
-            }
-            let _ = self.sender.send(ClipEvent::Html(html));
-        }
-        else if let Ok(text) = ctx.get_text() {
-            if !self.update_latest(text.as_bytes()) {
-                return CallbackResult::Next;
-            }
-            let _ = self.sender.send(ClipEvent::Text(text));
-        
-        } 
-        else if let Ok(img) = ctx.get_image() {
-            let data = img.bytes.to_vec();
-            if !self.update_latest(&data) {
-                return CallbackResult::Next;
-            }
-            let _ = self.sender.send(ClipEvent::Image(data));
-        } 
-        else if let Ok(file_list) = ctx.get().file_list() {
+        if let Ok(file_list) = ctx.get().file_list() {
             let paths_str = file_list.iter()
                 .map(|p| p.to_string_lossy())
                 .collect::<Vec<_>>().join("\n");
@@ -94,6 +73,29 @@ impl ClipboardHandler for SystemHook {
                 return CallbackResult::Next;
             }
             let _ = self.sender.send(ClipEvent::FileList(file_list));
+        }
+        else if let Ok(img) = ctx.get_image() {
+            let data = img.bytes.to_vec();
+            if !self.update_latest(&data) {
+                return CallbackResult::Next;
+            }
+            let _ = self.sender.send(ClipEvent::Image {
+                width: img.width,
+                height: img.height,
+                rgba_data: data,
+            });
+        }
+        else if let Ok(html) = ctx.get().html() {
+            if !self.update_latest(html.as_bytes()) {
+                return CallbackResult::Next;
+            }
+            let _ = self.sender.send(ClipEvent::Html(html));
+        }
+        else if let Ok(text) = ctx.get_text() {        // Text 作为兜底
+            if !self.update_latest(text.as_bytes()) {
+                return CallbackResult::Next;
+            }
+            let _ = self.sender.send(ClipEvent::Text(text));
         } else {
             eprintln!("未知类型");
         }
@@ -108,9 +110,8 @@ impl ClipboardHandler for SystemHook {
     }
 }
 
-// 辅助函数：计算简单哈希
+// 辅助函数：计算哈希 (使用 Blake3)
 fn compute_hash(data: &[u8]) -> String {
-    let mut hasher = Sha256::new();
-    hasher.update(data);
-    hex::encode(hasher.finalize())
+    let hash = blake3::hash(data);
+    hex::encode(hash.as_bytes())
 }
